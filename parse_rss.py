@@ -18,9 +18,12 @@ async def parse_url(session, url):
     except feedparser.FeedParserError as e:
         print(f"解析链接 {url} 时出现错误: {str(e)}")
 
-async def send_to_feishu(url, title, link):
+async def send_to_feishu(url, title, link, summary=None):
     webhook_url = 'https://open.feishu.cn/open-apis/bot/v2/hook/d6c7f1b5-3998-4b07-8504-cfb5a4e5b5c6'  # 替换为你的飞书机器人的Webhook URL
     message = f"标题: {title}\n链接: {link}"
+    
+    if summary:
+        message += f"\n摘要: {summary}"
     
     payload = {
         "msg_type": "text",
