@@ -26,4 +26,4 @@ jobs:
         pip install feedparser
 
     - name: Run RSS Parser
-      run: python parse_rss.py
+      run: python parse_rss.py > rss_output.txt
