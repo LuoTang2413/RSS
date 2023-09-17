@@ -3,6 +3,7 @@ import aiohttp
 import feedparser
 import requests
 import os
+import re  # Import the re module for regular expressions
 
 async def parse_url(session, url):
     try:
