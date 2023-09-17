@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 import feedparser
 import requests
+import os
 
 async def parse_url(session, url):
     try:
@@ -19,6 +20,7 @@ async def parse_url(session, url):
 
 async def send_to_feishu(url, title, link):
     webhook_url = 'https://open.feishu.cn/open-apis/bot/v2/hook/d6c7f1b5-3998-4b07-8504-cfb5a4e5b5c6'  # 替换为你的飞书机器人的Webhook URL
+    webhook_url = os.environ.get('FEISHU_WEBHOOK_URL')  # 从环境变量中读取Webhook地址
     message = f"标题: {title}\n链接: {link}"
     
     payload = {
