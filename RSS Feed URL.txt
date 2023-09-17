@@ -1,0 +1,8 @@
+名称1
+https://example.com/rss-feed1
+
+名称2
+https://example.com/rss-feed2
+
+名称3
+https://example.com/rss-feed3
