@@ -19,20 +19,46 @@ async def parse_url(session, url):
 
 async def send_to_feishu(url, title, link):
     webhook_url = 'https://open.feishu.cn/open-apis/bot/v2/hook/d6c7f1b5-3998-4b07-8504-cfb5a4e5b5c6'  # 替换为你的飞书机器人的Webhook URL
-    message = f"**标题:** {title}\n**链接:** [{link}]({link})"
-    
-    payload = {
-        "msg_type": "text",
+    message = {
+        "msg_type": "post",
         "content": {
-            "text": message
+            "post": {
+                "zh_cn": {
+                    "title": title,
+                    "content": [
+                        [
+                            {
+                                "tag": "text",
+                                "text": "标题："
+                            },
+                            {
+                                "tag": "a",
+                                "text": title,
+                                "href": link
+                            }
+                        ],
+                        [
+                            {
+                                "tag": "text",
+                                "text": "链接："
+                            },
+                            {
+                                "tag": "a",
+                                "text": link,
+                                "href": link
+                            }
+                        ]
+                    ]
+                }
+            }
         }
     }
-    
-    response = requests.post(webhook_url, json=payload)
-    
+
+    response = requests.post(webhook_url, json=message)
+
     if response.status_code == 200:
         print("消息发送成功")
-        
+
         # 保存推送的内容到文件
         with open("pushed_results.txt", "a") as file:
             file.write(message + "\n")
