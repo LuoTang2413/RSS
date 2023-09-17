@@ -19,42 +19,16 @@ async def parse_url(session, url):
 
 async def send_to_feishu(url, title, link):
     webhook_url = 'https://open.feishu.cn/open-apis/bot/v2/hook/d6c7f1b5-3998-4b07-8504-cfb5a4e5b5c6'  # 替换为你的飞书机器人的Webhook URL
-    message = {
-        "msg_type": "post",
+    message = f"标题: {title}\n链接: {link}"
+    
+    payload = {
+        "msg_type": "text",
         "content": {
-            "post": {
-                "zh_cn": {
-                    "title": title,
-                    "content": [
-                        [
-                            {
-                                "tag": "text",
-                                "text": "标题："
-                            },
-                            {
-                                "tag": "a",
-                                "text": title,
-                                "href": link
-                            }
-                        ],
-                        [
-                            {
-                                "tag": "text",
-                                "text": "链接："
-                            },
-                            {
-                                "tag": "a",
-                                "text": link,
-                                "href": link
-                            }
-                        ]
-                    ]
-                }
-            }
+            "text": message
         }
     }
-
-    response = requests.post(webhook_url, json=message)
+    
+    response = requests.post(webhook_url, json=payload)
 
     if response.status_code == 200:
         print("消息发送成功")
