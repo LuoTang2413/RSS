@@ -23,6 +23,7 @@ async def send_to_feishu(url, title, link, summary=None):
     message = f"标题: {title}\n链接: {link}"
     
     if summary:
+        summary = summary.replace('</p>', '')
         message += f"\n摘要: {summary}"
     
     payload = {
