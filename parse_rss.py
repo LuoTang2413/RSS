@@ -1,18 +1,40 @@
+import asyncio
+import aiohttp
 import feedparser
 
-# 读取文件中的链接
-with open("RSS Feed URL.txt", "r") as file:
-    urls = file.readlines()
+async def parse_url(session, url):
+    try:
+        async with session.get(url) as response:
+            if response.status == 200:
+                feed_content = await response.text()
+                feed = feedparser.parse(feed_content)
+                return feed.entries
+            else:
+                print(f"无法获取链接 {url}")
+    except (aiohttp.ClientError, aiohttp.ClientConnectionError) as e:
+        print(f"请求链接 {url} 时出现网络错误: {str(e)}")
+    except feedparser.FeedParserError as e:
+        print(f"解析链接 {url} 时出现错误: {str(e)}")
 
-# 解析每个链接的内容
-for url in urls:
-    url = url.strip()  # 去除开头和结尾的空白字符
-    feed = feedparser.parse(url)
-    
-    # 打印动态的标题和链接
-    for entry in feed.entries:
-        title = entry.title
-        link = entry.link
-        print("标题:", title)
-        print("链接:", link)
-        print("-----")
+async def main():
+    async with aiohttp.ClientSession() as session:
+        with open("RSS Feed URL.txt", "r") as file:
+            urls = file.readlines()
+
+        tasks = []
+        for url in urls:
+            url = url.strip()
+            tasks.append(parse_url(session, url))
+
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for result in results:
+            if isinstance(result, list):
+                for entry in result:
+                    title = entry.title
+                    link = entry.link
+                    print("标题:", title)
+                    print("链接:", link)
+                    print("-----")
+
+asyncio.run(main())
