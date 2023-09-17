@@ -25,7 +25,7 @@ async def send_to_feishu(url, title, link, summary=None):
     
     if summary:
         summary = re.sub(r'<\/?p>', '\n\n', summary)
-        summary = re.sub(r'\n\n+', '\n\n', summary)
+        summary = re.sub(r'<br>\s*<br>', '<br><br>', summary)
         message += f"\n摘要: {summary}"
     
     payload = {
