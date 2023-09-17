@@ -65,6 +65,9 @@ async def main():
                     print("链接:", link)
                     print("-----")
                     
-                    await send_to_feishu(url, title, link)
+                    if 'summary' in entry:
+                        await send_to_feishu(url, title, link, entry.summary)
+                    else:
+                        await send_to_feishu(url, title, link)
 
 asyncio.run(main())
