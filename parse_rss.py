@@ -32,6 +32,10 @@ async def send_to_feishu(url, title, link):
     
     if response.status_code == 200:
         print("消息发送成功")
+        
+        # 保存推送的内容到文件
+        with open("pushed_results.txt", "a") as file:
+            file.write(message + "\n")
     else:
         print("消息发送失败")
 
