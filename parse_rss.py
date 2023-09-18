@@ -37,7 +37,6 @@ async def send_to_feishu(url, title, link, summary=None):
     
     response = requests.post(webhook_url, json=payload)
 
-    
     if response.status_code == 200:
         print("消息发送成功")
 
