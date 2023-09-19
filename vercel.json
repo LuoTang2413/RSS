@@ -1,1 +1,13 @@
-
+{
+  "version": 2,
+  "builds": [
+    { "src": "path/to/source", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/path/to/entry-point.html" }
+  ],
+  "env": {
+    "API_KEY": "your-api-key",
+    "ENV_VAR": "value"
+  }
+}
