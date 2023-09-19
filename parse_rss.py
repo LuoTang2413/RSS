@@ -3,7 +3,9 @@ import aiohttp
 import feedparser
 import requests
 import os
-import re  # Import the re module for regular expressions
+import re
+from datetime import datetime
+from github import Github
 
 async def parse_url(session, url):
     try:
@@ -40,9 +42,19 @@ async def send_to_feishu(url, title, link, summary=None):
     if response.status_code == 200:
         print("消息发送成功")
 
-        # 保存推送的内容到文件
+        # 将推送的内容保存到本地文件
         with open("pushed_results.txt", "a") as file:
-            file.write(message + "\n")
+            file.write(f"{datetime.now()}: {message}\n")
+
+        # 将推送的内容保存到GitHub仓库
+        github_token = os.getenv("GIT_TOKEN")
+        github_repo = 'RSS'  # 替换为您的GitHub仓库名称，例如：username/repository
+        g = Github(github_token)
+        repo = g.get_repo(github_repo)
+        contents = repo.get_contents("pushed_results.txt")
+        updated_content = contents.decoded_content.decode() + f"\n{datetime.now()}: {message}\n"
+        repo.update_file(contents.path, "Update pushed_results.txt", updated_content, contents.sha)
+
     else:
         print("消息发送失败")
 
@@ -58,7 +70,7 @@ async def main():
 
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        for result in results:
+        for url, result in zip(urls, results):
             if isinstance(result, list):
                 for entry in result:
                     title = entry.title
