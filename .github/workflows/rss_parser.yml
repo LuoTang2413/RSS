@@ -26,6 +26,7 @@ jobs:
         pip install feedparser
         pip install requests
         pip install aiohttp
+        pip install PyGithub
 
     - name: Run RSS Parser
       run: python parse_rss.py > rss_output.txt
