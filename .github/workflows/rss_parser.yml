@@ -1,6 +1,6 @@
 name: RSS Parser
 
-on:
+#####on:
   schedule:
     - cron: '0 22,6,14 * * *'
   push:
